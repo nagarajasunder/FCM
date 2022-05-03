@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.geekydroid.firebaselearn.R
 import com.geekydroid.firebaselearn.data.User
+import com.geekydroid.firebaselearn.utils.UserOnClickListener
 
-class HomeFragmentAdapter : ListAdapter<User, HomeFragmentAdapter.ViewHolder>(UserItemCallback()) {
+class HomeFragmentAdapter(private val userOnClickListener: UserOnClickListener) :
+    ListAdapter<User, HomeFragmentAdapter.ViewHolder>(UserItemCallback()) {
 
 
     override fun onCreateViewHolder(
@@ -25,6 +27,10 @@ class HomeFragmentAdapter : ListAdapter<User, HomeFragmentAdapter.ViewHolder>(Us
     override fun onBindViewHolder(holder: HomeFragmentAdapter.ViewHolder, position: Int) {
         val currentUser = currentList[position]
         holder.userName.text = currentUser.emailAddress
+
+        holder.itemView.setOnClickListener {
+            userOnClickListener.onUserClick(currentUser)
+        }
     }
 
 

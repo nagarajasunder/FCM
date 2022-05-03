@@ -19,7 +19,6 @@ class SignUpFragmentViewModel(application: Application) : AndroidViewModel(appli
     private val signUpListener = MutableLiveData<Boolean>()
     fun getSignUpListener() = signUpListener
 
-    //mecov90536@svcache.com
 
     fun verifyEmailAddressAndPassword(emailAddress: String, password: String): Boolean {
         if (emailAddress.isEmpty() || password.isEmpty()) {

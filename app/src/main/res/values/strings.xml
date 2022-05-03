@@ -8,4 +8,6 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="user_profile_image">User profile Image</string>
+    <string name="type_something">Type Something..</string>
+    <string name="send_button">Send Button</string>
 </resources>

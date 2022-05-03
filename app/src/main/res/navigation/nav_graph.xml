@@ -20,5 +20,21 @@
         android:id="@+id/homeFragment"
         android:name="com.geekydroid.firebaselearn.ui.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.geekydroid.firebaselearn.ui.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" >
+        <argument
+            android:name="senderId"
+            app:argType="string" />
+        <argument
+            android:name="receiverId"
+            app:argType="string" />
+    </fragment>
 </navigation>

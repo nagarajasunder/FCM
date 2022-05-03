@@ -52,13 +52,12 @@ class HomeFragmentViewmodel(application: Application) : AndroidViewModel(applica
     }
 
     init {
-        getUserId()
+        fetchUserId()
 
     }
 
 
-
-    private fun getUserId() {
+    private fun fetchUserId() {
         viewModelScope.launch {
             userId =
                 UserPreferences.getUserId(getApplication<Application>().applicationContext).first()
@@ -69,6 +68,7 @@ class HomeFragmentViewmodel(application: Application) : AndroidViewModel(applica
 
     fun getUserList() = userLiveData
 
+    fun getUserId() = userId
 }
 
 class HomeFragmentViewModelFactory(private val application: Application) :

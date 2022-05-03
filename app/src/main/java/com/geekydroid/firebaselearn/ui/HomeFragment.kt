@@ -1,17 +1,19 @@
 package com.geekydroid.firebaselearn.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.geekydroid.firebaselearn.R
 import com.geekydroid.firebaselearn.adapter.HomeFragmentAdapter
+import com.geekydroid.firebaselearn.data.User
+import com.geekydroid.firebaselearn.utils.UserOnClickListener
 import com.geekydroid.firebaselearn.viewmodels.HomeFragmentViewModelFactory
 import com.geekydroid.firebaselearn.viewmodels.HomeFragmentViewmodel
 import com.google.firebase.auth.FirebaseAuth
@@ -19,7 +21,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment(R.layout.fragment_home), UserOnClickListener {
 
     private lateinit var fragmentView: View
     private lateinit var recyclerView: RecyclerView
@@ -27,6 +29,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var auth: FirebaseAuth
     private lateinit var viewModelFactory: HomeFragmentViewModelFactory
     private lateinit var viewModel: HomeFragmentViewmodel
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,13 +49,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 
 
+
     }
 
     private fun setUI(fragmentView: View) {
         recyclerView = fragmentView.findViewById(R.id.recycler_view)
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = HomeFragmentAdapter()
+        adapter = HomeFragmentAdapter(this)
         recyclerView.adapter = adapter
 
     }
@@ -75,5 +79,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         if (auth.currentUser != null) {
             auth.signOut()
         }
+    }
+
+    override fun onUserClick(user: User) {
+        val action = HomeFragmentDirections.actionHomeFragmentToChatFragment(viewModel.getUserId(), user.userId)
+        findNavController().navigate(action)
     }
 }

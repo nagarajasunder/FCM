@@ -3,7 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/the_developer/AndroidStudioProjects/FirebaseLearn/app/src/main/res/drawable/chat_left_background.xml" value="0.1215" />
+        <entry key="..\:/Users/the_developer/AndroidStudioProjects/FirebaseLearn/app/src/main/res/drawable/chat_right_background.xml" value="0.1215" />
+        <entry key="..\:/Users/the_developer/AndroidStudioProjects/FirebaseLearn/app/src/main/res/drawable/message_sender_background.xml" value="0.1215" />
+        <entry key="..\:/Users/the_developer/AndroidStudioProjects/FirebaseLearn/app/src/main/res/drawable/message_sender_background_dark.xml" value="0.1215" />
         <entry key="..\:/Users/the_developer/AndroidStudioProjects/FirebaseLearn/app/src/main/res/layout/activity_main.xml" value="0.25052083333333336" />
+        <entry key="..\:/Users/the_developer/AndroidStudioProjects/FirebaseLearn/app/src/main/res/layout/chat_item_left.xml" value="0.25052083333333336" />
+        <entry key="..\:/Users/the_developer/AndroidStudioProjects/FirebaseLearn/app/src/main/res/layout/chat_item_right.xml" value="0.25052083333333336" />
+        <entry key="..\:/Users/the_developer/AndroidStudioProjects/FirebaseLearn/app/src/main/res/layout/fragment_chat.xml" value="0.187890625" />
         <entry key="..\:/Users/the_developer/AndroidStudioProjects/FirebaseLearn/app/src/main/res/layout/fragment_home.xml" value="0.25052083333333336" />
         <entry key="..\:/Users/the_developer/AndroidStudioProjects/FirebaseLearn/app/src/main/res/layout/fragment_sign_up.xml" value="0.25052083333333336" />
         <entry key="..\:/Users/the_developer/AndroidStudioProjects/FirebaseLearn/app/src/main/res/layout/user_item.xml" value="0.25052083333333336" />
