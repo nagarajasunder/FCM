@@ -12,7 +12,6 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.geekydroid.firebaselearn.data.Token
 import com.geekydroid.firebaselearn.ui.MainActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
@@ -48,18 +47,19 @@ class MessagingService : FirebaseMessagingService() {
     }
 
     private fun updateTokenToServer(uid: String, token: String) {
-        val token_data = Token(uid, token = token)
-        val database = FirebaseDatabase.getInstance().reference.child("Tokens").child(uid)
-        database.setValue(token_data)
+        val database =
+            FirebaseDatabase.getInstance().reference.child("users").child(uid).child("token")
+        database.setValue(token)
     }
 
     private fun updateTokenViaSharedPrefs(value: String) {
-        Log.d(TAG, "updateTokenViaSharedPrefs: called")
         val prefs: SharedPreferences? = getSharedPreferences("token", MODE_PRIVATE)
         prefs?.edit()?.putString("token", value)?.apply()
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
+
+        Log.d(TAG, "onMessageReceived: called ${message.data}")
 
         val intent = Intent(this, MainActivity::class.java)
         val notificationManager =

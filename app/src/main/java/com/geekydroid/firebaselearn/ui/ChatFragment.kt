@@ -1,7 +1,6 @@
 package com.geekydroid.firebaselearn.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,9 +13,7 @@ import com.geekydroid.firebaselearn.viewmodels.ChatFragmentViewModel
 import com.geekydroid.firebaselearn.viewmodels.ChatFragmentViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.database.FirebaseDatabase
 
-private const val TAG = "ChatFragment"
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
@@ -30,12 +27,17 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private val args: ChatFragmentArgs by navArgs()
     private lateinit var senderId: String
     private lateinit var receiverId: String
+    private lateinit var receiverToken: String
+    private lateinit var senderEmailAddress: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fragmentView = view
         senderId = args.senderId
         receiverId = args.receiverId
+        receiverToken = args.receiverToken
+        senderEmailAddress = args.senderEmailAddress
+
         setUI()
         viewModelFactory = ChatFragmentViewModelFactory(senderId, receiverId)
         viewModel = ViewModelProvider(this, viewModelFactory)[ChatFragmentViewModel::class.java]
@@ -59,15 +61,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val message = etMessage.text.toString()
 
         if (message.trim().isNotEmpty()) {
-            val database = FirebaseDatabase.getInstance().reference.child("tokens")
-            Log.d(
-                TAG,
-                "sendMessage: token ${database.child(senderId).get().result.children}"
-            )
             viewModel.newChat(
-                database.child(senderId).get().result.children.toString(),
-                database.child(receiverId).get().result.children.toString(),
-                message.trim()
+                senderId,
+                senderEmailAddress,
+                receiverId,
+                message.trim(),
+                receiverToken
             )
         }
         etMessage.text?.clear()

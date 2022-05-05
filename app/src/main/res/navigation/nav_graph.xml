@@ -36,5 +36,14 @@
         <argument
             android:name="receiverId"
             app:argType="string" />
+        <argument
+            android:name="senderToken"
+            app:argType="string" />
+        <argument
+            android:name="receiverToken"
+            app:argType="string" />
+        <argument
+            android:name="senderEmailAddress"
+            app:argType="string" />
     </fragment>
 </navigation>

@@ -31,6 +31,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), UserOnClickListener {
     private lateinit var viewModelFactory: HomeFragmentViewModelFactory
     private lateinit var viewModel: HomeFragmentViewmodel
     private var currentuser: FirebaseUser? = null
+    private lateinit var loggedInUser: User
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,6 +54,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), UserOnClickListener {
         viewModel.getUserList().observe(viewLifecycleOwner) { response ->
             if (response.isNotEmpty()) {
                 adapter.submitList(response)
+            }
+        }
+
+        viewModel.getCurrentUser().observe(viewLifecycleOwner) {
+            it?.let {
+                loggedInUser = it
             }
         }
 
@@ -90,7 +97,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), UserOnClickListener {
 
     override fun onUserClick(user: User) {
         val action =
-            HomeFragmentDirections.actionHomeFragmentToChatFragment(currentuser!!.uid, user.userId)
+            HomeFragmentDirections.actionHomeFragmentToChatFragment(
+                currentuser!!.uid,
+                user.userId,
+                loggedInUser.userToken,
+                user.userToken,
+                loggedInUser.emailAddress
+            )
         findNavController().navigate(action)
     }
 }

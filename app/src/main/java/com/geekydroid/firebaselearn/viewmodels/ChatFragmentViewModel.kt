@@ -14,8 +14,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 private const val TAG = "ChatFragmentViewModel"
@@ -52,7 +50,7 @@ class ChatFragmentViewModel(private val senderID: String, private val receiverId
         database.reference.child("chats").addValueEventListener(chatListener)
     }
 
-    fun newChat(senderId: String, receiverId: String, message: String) {
+    fun newChat(senderId: String, senderUserName:String,receiverId: String, message: String, receiverToken: String) {
 
 
         val chatId = database.reference.child("chats").push().key
@@ -66,8 +64,8 @@ class ChatFragmentViewModel(private val senderID: String, private val receiverId
         database.reference.child("chats").child(chatId!!).setValue(chat)
 
         val notification = PushNotification(
-            NotificationData(title = senderId, message = message),
-            receiverId
+            NotificationData(title = senderUserName, message = message),
+            receiverToken
         )
         sendNotification(notification)
     }
@@ -80,10 +78,8 @@ class ChatFragmentViewModel(private val senderID: String, private val receiverId
             try {
                 val response = RetrofitInstance.api.sendNotification(notification)
                 if (response.isSuccessful) {
-                    Log.d(TAG, "sendNotification: ${response.raw()}")
-                }
-                else
-                {
+                    Log.d(TAG, "sendNotification: success ${response.raw()}")
+                } else {
                     Log.d(TAG, "fail sendNotification: ${response.raw()}")
                 }
             } catch (e: Exception) {

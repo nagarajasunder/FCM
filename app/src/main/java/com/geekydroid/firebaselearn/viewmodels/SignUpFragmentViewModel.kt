@@ -30,6 +30,14 @@ class SignUpFragmentViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun createUser(emailAddress: String, password: String) {
+
+        val prefs: SharedPreferences? =
+            getApplication<Application>().applicationContext.getSharedPreferences(
+                "token",
+                FirebaseMessagingService.MODE_PRIVATE
+            )
+        val token = prefs?.getString("token", "") ?: ""
+
         auth.createUserWithEmailAndPassword(emailAddress, password)
             .addOnCompleteListener { result ->
                 if (result.isSuccessful) {
@@ -38,22 +46,13 @@ class SignUpFragmentViewModel(application: Application) : AndroidViewModel(appli
                     val user = User(
                         userId = uniqueKey!!,
                         emailAddress = emailAddress,
+                        userToken = token,
                         createdOn = System.currentTimeMillis()
                     )
                     val ref = database.getReference("users").child(uniqueKey)
                     ref.setValue(user).addOnCompleteListener { result2 ->
                         if (result2.isSuccessful) {
-                            val prefs: SharedPreferences? =
-                                getApplication<Application>().applicationContext.getSharedPreferences(
-                                    "token",
-                                    FirebaseMessagingService.MODE_PRIVATE
-                                )
-                            val token = prefs?.getString("token", "")
-                            database.getReference("Tokens").child(uniqueKey)
-                                .setValue(token).addOnCompleteListener {
-                                    signUpListener.postValue(true)
-                                }
-
+                            signUpListener.postValue(true)
                         } else {
                             signUpListener.postValue(false)
                         }

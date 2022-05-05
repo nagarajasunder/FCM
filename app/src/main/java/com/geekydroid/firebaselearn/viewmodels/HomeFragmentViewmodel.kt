@@ -17,6 +17,8 @@ class HomeFragmentViewmodel(application: Application, private val userId: String
 
     private val database = Firebase.database
     private val userLiveData: MutableLiveData<List<User>> = MutableLiveData()
+    private lateinit var currentUser: User
+    private val currentUserLiveData: MutableLiveData<User> = MutableLiveData()
     private val userListener = object : ValueEventListener {
         /**
          * This method will be called with a snapshot of the data at this location. It will also be called
@@ -31,6 +33,9 @@ class HomeFragmentViewmodel(application: Application, private val userId: String
                 if (user != null) {
                     if (user.userId != userId) {
                         userList.add(user)
+                    } else {
+                        currentUser = user
+                        currentUserLiveData.postValue(currentUser)
                     }
                 }
             }
@@ -52,6 +57,8 @@ class HomeFragmentViewmodel(application: Application, private val userId: String
 
 
     fun getUserList() = userLiveData
+
+    fun getCurrentUser() = currentUserLiveData
 
 
     init {
