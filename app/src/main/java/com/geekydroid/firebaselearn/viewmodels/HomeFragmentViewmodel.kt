@@ -1,21 +1,20 @@
 package com.geekydroid.firebaselearn.viewmodels
 
 import android.app.Application
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.geekydroid.firebaselearn.data.User
-import com.geekydroid.firebaselearn.utils.UserPreferences
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
-class HomeFragmentViewmodel(application: Application) : AndroidViewModel(application) {
+class HomeFragmentViewmodel(application: Application, private val userId: String) :
+    AndroidViewModel(application) {
 
-    private lateinit var userId: String
     private val database = Firebase.database
     private val userLiveData: MutableLiveData<List<User>> = MutableLiveData()
     private val userListener = object : ValueEventListener {
@@ -51,27 +50,19 @@ class HomeFragmentViewmodel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    init {
-        fetchUserId()
-
-    }
-
-
-    private fun fetchUserId() {
-        viewModelScope.launch {
-            userId =
-                UserPreferences.getUserId(getApplication<Application>().applicationContext).first()
-            database.reference.child("users").addValueEventListener(userListener)
-            Log.d("homeFrag", "getUserId: $userId")
-        }
-    }
 
     fun getUserList() = userLiveData
 
-    fun getUserId() = userId
+
+    init {
+        database.reference.child("users").addValueEventListener(userListener)
+    }
 }
 
-class HomeFragmentViewModelFactory(private val application: Application) :
+class HomeFragmentViewModelFactory(
+    private val application: Application,
+    private val userId: String
+) :
     ViewModelProvider.Factory {
     /**
      * Creates a new instance of the given `Class`.
@@ -80,7 +71,8 @@ class HomeFragmentViewModelFactory(private val application: Application) :
      * @return a newly created ViewModel
      */
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(Application::class.java).newInstance(application)
+        return modelClass.getConstructor(Application::class.java, String::class.java)
+            .newInstance(application, userId)
     }
 
 }

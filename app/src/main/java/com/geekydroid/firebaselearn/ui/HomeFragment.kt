@@ -17,6 +17,7 @@ import com.geekydroid.firebaselearn.utils.UserOnClickListener
 import com.geekydroid.firebaselearn.viewmodels.HomeFragmentViewModelFactory
 import com.geekydroid.firebaselearn.viewmodels.HomeFragmentViewmodel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -29,6 +30,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), UserOnClickListener {
     private lateinit var auth: FirebaseAuth
     private lateinit var viewModelFactory: HomeFragmentViewModelFactory
     private lateinit var viewModel: HomeFragmentViewmodel
+    private var currentuser: FirebaseUser? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,8 +38,15 @@ class HomeFragment : Fragment(R.layout.fragment_home), UserOnClickListener {
 
         fragmentView = view
         auth = Firebase.auth
-        viewModelFactory = HomeFragmentViewModelFactory(requireActivity().application)
-        viewModel = ViewModelProvider(this)[HomeFragmentViewmodel::class.java]
+        if (auth.currentUser != null) {
+            currentuser = auth.currentUser!!
+        }
+        viewModelFactory =
+            HomeFragmentViewModelFactory(
+                requireActivity().application,
+                if (currentuser == null) "" else currentuser!!.uid
+            )
+        viewModel = ViewModelProvider(this, viewModelFactory)[HomeFragmentViewmodel::class.java]
         setHasOptionsMenu(true)
         setUI(fragmentView)
 
@@ -46,8 +55,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), UserOnClickListener {
                 adapter.submitList(response)
             }
         }
-
-
 
 
     }
@@ -82,7 +89,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), UserOnClickListener {
     }
 
     override fun onUserClick(user: User) {
-        val action = HomeFragmentDirections.actionHomeFragmentToChatFragment(viewModel.getUserId(), user.userId)
+        val action =
+            HomeFragmentDirections.actionHomeFragmentToChatFragment(currentuser!!.uid, user.userId)
         findNavController().navigate(action)
     }
 }

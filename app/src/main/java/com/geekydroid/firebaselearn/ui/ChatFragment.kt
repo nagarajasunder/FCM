@@ -1,6 +1,7 @@
 package com.geekydroid.firebaselearn.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +14,9 @@ import com.geekydroid.firebaselearn.viewmodels.ChatFragmentViewModel
 import com.geekydroid.firebaselearn.viewmodels.ChatFragmentViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.database.FirebaseDatabase
+
+private const val TAG = "ChatFragment"
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
@@ -40,6 +44,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             sendMessage()
         }
 
+
+
         viewModel.getChatData().observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 chatAdapter.submitList(it)
@@ -51,8 +57,18 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private fun sendMessage() {
         val message = etMessage.text.toString()
+
         if (message.trim().isNotEmpty()) {
-            viewModel.newChat(senderId, receiverId, message.trim())
+            val database = FirebaseDatabase.getInstance().reference.child("tokens")
+            Log.d(
+                TAG,
+                "sendMessage: token ${database.child(senderId).get().result.children}"
+            )
+            viewModel.newChat(
+                database.child(senderId).get().result.children.toString(),
+                database.child(receiverId).get().result.children.toString(),
+                message.trim()
+            )
         }
         etMessage.text?.clear()
     }

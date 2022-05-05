@@ -1,6 +1,7 @@
 package com.geekydroid.firebaselearn.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -22,6 +23,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         auth = Firebase.auth
+
+        Log.d("Mainactivity", "onCreate: ${auth.currentUser}")
+
 
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
